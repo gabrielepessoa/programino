@@ -76,7 +76,7 @@ class Series:
     '''
     def __init__(self, target_score=200, starting_domino=None):
         if starting_domino is None:
-            starting_domino = dominoes.Domino(6, 6)
+            starting_domino = dominoes.Domino(3, 3) #Mudeu de 6 para 3
 
         self.games = [dominoes.Game.new(starting_domino=starting_domino)]
         self.scores = [0, 0]
@@ -137,7 +137,7 @@ class Series:
         string_list = ['Series to {} points:'.format(self.target_score)]
 
         for i, score in enumerate(self.scores):
-            string_list.append('Team {} has {} points.'.format(i, score))
+            string_list.append('Player {} has {} points.'.format(i, score))
 
         return '\n'.join(string_list)
 

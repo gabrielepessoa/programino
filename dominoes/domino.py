@@ -50,8 +50,10 @@ class Domino(DominoBase):
 
         # order of values does not matter
         # e.g. Domino(1, 2) == Domino(2, 1)
-        return sorted((self.first, self.second)) == \
-            sorted((other.first, other.second))
+        # return sorted((self.first, self.second)) == \
+        #     sorted((other.first, other.second))
+        return ((self.first, self.second) == (other.first, other.second)) or \
+            ((self.first, self.second) == (other.second, other.first))
 
     def __ne__(self, other):
         return not self == other

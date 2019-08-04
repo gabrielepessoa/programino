@@ -41,7 +41,7 @@ class Board:
         :raises EmptyBoardException: if the board is empty
         '''
         try:
-            return self.board[0].first
+            return self.board[0].first #pegar primeira cabeça do domino no board a esquerda
         except IndexError:
             raise dominoes.EmptyBoardException('Cannot retrieve the left end of'
                                                ' the board because it is empty!')
@@ -52,7 +52,7 @@ class Board:
         :raises EmptyBoardException: if the board is empty
         '''
         try:
-            return self.board[-1].second
+            return self.board[-1].second #pegar última cabeça do domino no board a direita
         except IndexError:
             raise dominoes.EmptyBoardException('Cannot retrieve the right end of'
                                                ' the board because it is empty!')

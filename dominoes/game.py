@@ -2,16 +2,40 @@ import copy
 import dominoes
 import itertools
 import random
+from .head import Head
 
 def _randomized_hands():
     '''
     :return: 4 hands, obtained by shuffling the 28 dominoes used in
              this variation of the game, and distributing them evenly
     '''
-    all_dominoes = [dominoes.Domino(i, j) for i in range(7) for j in range(i, 7)]
+    all_dominoes = [
+        dominoes.Domino(Head(int), Head(int)), 
+        dominoes.Domino(Head(float), Head(1)),
+        dominoes.Domino(Head(str), Head(27)),
+        dominoes.Domino(Head(True), Head(int)),
+        dominoes.Domino(Head(float), Head(float)),
+        dominoes.Domino(Head(int), Head(0.4)),
+        dominoes.Domino(Head('Oi'), Head(13.1)),
+        dominoes.Domino(Head(3.14), Head(False)),
+        dominoes.Domino(Head(bool), Head(bool)),
+        dominoes.Domino(Head(False), Head(5)),
+        dominoes.Domino(Head(True), Head(0.7)),
+        dominoes.Domino(Head('Maria'), Head(True)),
+        dominoes.Domino(Head(str), Head(str)),
+        dominoes.Domino(Head('Juvi'), Head(int)),
+        dominoes.Domino(Head(str), Head(False)),
+        dominoes.Domino(Head('Olá, Mundo!'), Head(5.6)),
+    ]
+
+    # for i in range(6): #modificado de 7 para 6. 2 jogadores com 8 peças cada
+    #     for j in range(i, 6):#modificado de 7 para 6. 2 jogadores com 8 peças cada
+    #         all_dominoes.append(dominoes.Domino(i, j)) 
     random.shuffle(all_dominoes)
-    return [dominoes.Hand(all_dominoes[0:7]), dominoes.Hand(all_dominoes[7:14]),
-            dominoes.Hand(all_dominoes[14:21]), dominoes.Hand(all_dominoes[21:28])]
+    # print(all_dominoes)
+    # print(len(all_dominoes))
+    #modificado de [0:7], [7:14], [14:21], [21:28] para [0:4]...
+    return [dominoes.Hand(all_dominoes[0:8]), dominoes.Hand(all_dominoes[8:16])]
 
 def _validate_player(player):
     '''
@@ -21,7 +45,7 @@ def _validate_player(player):
     :return: None
     :raises NoSuchPlayerException: if the player is invalid
     '''
-    valid_players = range(4)
+    valid_players = range(2) #mudei de 4 pra 2. se tornar 2 jogadores
     if player not in valid_players:
         valid_players = ', '.join(str(p) for p in valid_players)
         raise dominoes.NoSuchPlayerException('{} is not a valid player. Valid players'
@@ -35,6 +59,7 @@ def _domino_hand(d, hands):
     :raises NoSuchDominoException: if no hand contains the specified domino
     '''
     for i, hand in enumerate(hands):
+        #print(hand)
         if d in hand:
             return i
 
@@ -47,8 +72,9 @@ def _remaining_points(hands):
              remaining in each of the input hands
     '''
     points = []
-    for hand in hands:
-        points.append(sum(d.first + d.second for d in hand))
+    points.append(1)
+    #for hand in hands:
+    #    points.append(sum(d.first + d.second for d in hand))
 
     return points
 
@@ -108,7 +134,7 @@ def next_player(player):
                        next player. Must be 0, 1, 2, or 3.
     :return: the next player
     '''
-    return (player + 1) % 4
+    return (player + 1) % 2 #modificado de 4 para 2
 
 class Game:
     '''
@@ -292,11 +318,11 @@ class Game:
         moves = []
         for d in self.hands[self.turn]:
             if left_end in d:
-                moves.append((d, True))
+                moves.append((d, True))  
             # do not double count moves if both of the board's ends have
             # the same value, and a domino can be placed on both of them
             if right_end in d and left_end != right_end:
-                moves.append((d, False))
+                moves.append((d, False)) 
 
         self.valid_moves = tuple(moves)
 
@@ -319,6 +345,7 @@ class Game:
         :raises EndsMismatchException: if the domino cannot be placed on
                                        the specified position in the board
         '''
+        # se já existir resultado é pq o jogo acabou e n pode mais jogar
         if self.result is not None:
             raise dominoes.GameOverException('Cannot make a move - the game is over!')
 
@@ -336,10 +363,12 @@ class Game:
         self.moves.append((d, left))
 
         # check if the game ended due to a player running out of dominoes
+        # valida se o jogador que acabou de jogar ficou com a mão vazia, assim vencendo o jogo
         if not self.hands[self.turn]:
             self.valid_moves = ()
             self.result = dominoes.Result(
-                self.turn, True, pow(-1, self.turn) * sum(_remaining_points(self.hands))
+                #self.turn, True, pow(-1, self.turn) * sum(_remaining_points(self.hands))
+                self.turn, True, sum(_remaining_points(self.hands))
             )
             return self.result
 
@@ -360,16 +389,16 @@ class Game:
 
         if stuck:
             player_points = _remaining_points(self.hands)
-            team_points = [player_points[0] + player_points[2],
-                           player_points[1] + player_points[3]]
+            # team_points = [player_points[0] + player_points[2],
+            #                player_points[1] + player_points[3]]
 
-            if team_points[0] < team_points[1]:
-                self.result = dominoes.Result(self.turn, False, sum(team_points))
-            elif team_points[0] == team_points[1]:
-                self.result = dominoes.Result(self.turn, False, 0)
-            else:
-                self.result = dominoes.Result(self.turn, False, -sum(team_points))
-
+            # if team_points[0] < team_points[1]:
+            #     self.result = dominoes.Result(self.turn, False, sum(team_points))
+            # elif team_points[0] == team_points[1]:
+            #     self.result = dominoes.Result(self.turn, False, 0)
+            # else:
+            #     self.result = dominoes.Result(self.turn, False, -sum(team_points))
+            self.result = dominoes.Result(self.turn, False, sum(player_points,0))
             return self.result
 
     def missing_values(self):

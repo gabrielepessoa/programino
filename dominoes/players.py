@@ -55,6 +55,8 @@ class counter:
                      of this class.
     :var int count: the amount of times that this player has been called.
     :var str __name__: the name of this player.
+    : A quantidade de vezes que o jogador em questão foi chamdao
+    : Identidade é o padrão e nome é o próprio nome da classe
     '''
     def __init__(self, player=identity, name=None):
         self.count = 0
