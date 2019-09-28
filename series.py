@@ -1,4 +1,5 @@
 import programino
+from .head import Head
 
 class Series:
     '''
@@ -76,7 +77,7 @@ class Series:
     '''
     def __init__(self, target_score=200, starting_domino=None):
         if starting_domino is None:
-            starting_domino = programino.Domino(3, 3) #Mudeu de 6 para 3
+            starting_domino = programino.Domino(Head(float),Head(float)) #Mudei de 6 para float
 
         self.games = [programino.Game.new(starting_domino=starting_domino)]
         self.scores = [0, 0]
