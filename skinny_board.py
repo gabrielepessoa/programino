@@ -1,20 +1,23 @@
-import collections
-import dominoes
+import programino
 
-class Board:
+class SkinnyBoard:
     '''
     Python class for objects that represent a domino board.
     A domino board consists of a series of dominoes placed
     end to end such that the values on connected ends match.
+    This class reduces the memory required by each instance
+    by remembering only the values at the ends of the board.
 
-    :var board: deque representing the game board
+    :param int left: value on the left end of the board
+    :param int right: value on the right end of the board
+    :param int length: amount of dominoes on the board
 
     .. code-block:: python
 
         >>> import dominoes
         >>> d1 = dominoes.Domino(1, 2)
         >>> d2 = dominoes.Domino(1, 3)
-        >>> b = dominoes.Board()
+        >>> b = dominoes.SkinnyBoard()
         >>> repr(b)
         ''
         >>> b.add(d1, True)
@@ -24,7 +27,7 @@ class Board:
         EndsMismatchException: [1|3] cannot be added to the right of the board - values do not match!
         >>> b.add(d2, True)
         >>> b
-        [3|1][1|2]
+        [3|?][?|2]
         >>> b.left_end()
         3
         >>> b.right_end()
@@ -32,30 +35,47 @@ class Board:
         >>> len(b)
         2
     '''
-    def __init__(self):
-        self.board = collections.deque()
+    def __init__(self, left=None, right=None, length=0):
+        self._left = left
+        self._right = right
+        self._length = length
+
+    @classmethod
+    def from_board(cls, board):
+        '''
+        :param Board board: board to represent
+        :return: SkinnyBoard to represent the given Board
+        '''
+        if len(board):
+            left = board.left_end()
+            right = board.right_end()
+        else:
+            left = None
+            right = None
+
+        return cls(left, right, len(board))
 
     def left_end(self):
         '''
         :return: the outward-facing value on the left end of the board
         :raises EmptyBoardException: if the board is empty
         '''
-        try:
-            return self.board[0].first #pegar primeira cabeça do domino no board a esquerda
-        except IndexError:
-            raise dominoes.EmptyBoardException('Cannot retrieve the left end of'
+        if not self:
+            raise programino.EmptyBoardException('Cannot retrieve the left end of'
                                                ' the board because it is empty!')
+
+        return self._left
 
     def right_end(self):
         '''
         :return: the outward-facing value on the right end of the board
         :raises EmptyBoardException: if the board is empty
         '''
-        try:
-            return self.board[-1].second #pegar última cabeça do domino no board a direita
-        except IndexError:
-            raise dominoes.EmptyBoardException('Cannot retrieve the right end of'
+        if not self:
+            raise programino.EmptyBoardException('Cannot retrieve the right end of'
                                                ' the board because it is empty!')
+
+        return self._right
 
     def _add_left(self, d):
         '''
@@ -66,16 +86,19 @@ class Board:
         :raises EndsMismatchException: if the values do not match
         '''
         if not self:
-            self.board.append(d)
-        elif d.first == self.left_end():
-            self.board.appendleft(d.inverted())
+            self._left = d.first
+            self._right = d.second
         elif d.second == self.left_end():
-            self.board.appendleft(d)
+            self._left = d.first
+        elif d.first == self.left_end():
+            self._left = d.second
         else:
-            raise dominoes.EndsMismatchException(
+            raise programino.EndsMismatchException(
                 '{} cannot be added to the left of'
                 ' the board - values do not match!'.format(d)
             )
+
+        self._length += 1
 
     def _add_right(self, d):
         '''
@@ -86,16 +109,19 @@ class Board:
         :raises EndsMismatchException: if the values do not match
         '''
         if not self:
-            self.board.append(d)
+            self._left = d.first
+            self._right = d.second
         elif d.first == self.right_end():
-            self.board.append(d)
+            self._right = d.second
         elif d.second == self.right_end():
-            self.board.append(d.inverted())
+            self._right = d.first
         else:
-            raise dominoes.EndsMismatchException(
+            raise programino.EndsMismatchException(
                 '{} cannot be added to the right of'
                 ' the board - values do not match!'.format(d)
             )
+
+        self._length += 1
 
     def add(self, d, left):
         '''
@@ -122,10 +148,19 @@ class Board:
         return not self == other
 
     def __len__(self):
-        return len(self.board)
+        return self._length
 
     def __str__(self):
-        return ''.join(str(d) for d in self.board)
+        if not self:
+            return ''
+        elif self._length == 1:
+            return str(programino.Domino(self._left, self._right))
+        else:
+            left_domino = programino.Domino(self._left, '?')
+            right_domino = programino.Domino('?', self._right)
+            middle_dominoes = [programino.Domino('?', '?')] * (self._length - 2)
+            all_dominoes = [left_domino] + middle_dominoes + [right_domino]
+            return ''.join(str(d) for d in all_dominoes)
 
     def __repr__(self):
         return str(self)

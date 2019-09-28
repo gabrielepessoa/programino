@@ -1,8 +1,8 @@
 import copy
-import dominoes
+import programino
 import operator
 
-def make_moves(game, player=dominoes.players.identity):
+def make_moves(game, player=programino.players.identity):
     '''
     For each of a Game object's valid moves, yields
     a tuple containing the move and the Game object
@@ -38,7 +38,7 @@ def make_moves(game, player=dominoes.players.identity):
     yield move, game
 
 def alphabeta(game, alpha_beta=(-float('inf'), float('inf')),
-              player=dominoes.players.identity):
+              player=programino.players.identity):
     '''
     Runs minimax search with alpha-beta pruning on the provided game.
 

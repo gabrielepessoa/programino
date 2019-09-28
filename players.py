@@ -30,7 +30,7 @@ may be applied one after another for easy composability.
 '''
 import collections
 import copy
-import dominoes
+import programino
 import random as rand
 
 def identity(game):

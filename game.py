@@ -1,5 +1,5 @@
 import copy
-import dominoes
+import programino
 import itertools
 import random
 from .head import Head
@@ -10,22 +10,22 @@ def _randomized_hands():
              this variation of the game, and distributing them evenly
     '''
     all_dominoes = [
-        dominoes.Domino(Head(int), Head(int)), 
-        dominoes.Domino(Head(float), Head(1)),
-        dominoes.Domino(Head(str), Head(27)),
-        dominoes.Domino(Head(True), Head(int)),
-        dominoes.Domino(Head(float), Head(float)),
-        dominoes.Domino(Head(int), Head(0.4)),
-        dominoes.Domino(Head('Oi'), Head(13.1)),
-        dominoes.Domino(Head(3.14), Head(False)),
-        dominoes.Domino(Head(bool), Head(bool)),
-        dominoes.Domino(Head(False), Head(5)),
-        dominoes.Domino(Head(True), Head(0.7)),
-        dominoes.Domino(Head('Maria'), Head(True)),
-        dominoes.Domino(Head(str), Head(str)),
-        dominoes.Domino(Head('Juvi'), Head(int)),
-        dominoes.Domino(Head(str), Head(False)),
-        dominoes.Domino(Head('Olá, Mundo!'), Head(5.6)),
+        programino.Domino(Head(int), Head(int)), 
+        programino.Domino(Head(float), Head(1)),
+        programino.Domino(Head(str), Head(27)),
+        programino.Domino(Head(True), Head(int)),
+        programino.Domino(Head(float), Head(float)),
+        programino.Domino(Head(int), Head(0.4)),
+        programino.Domino(Head('Oi'), Head(13.1)),
+        programino.Domino(Head(3.14), Head(False)),
+        programino.Domino(Head(bool), Head(bool)),
+        programino.Domino(Head(False), Head(5)),
+        programino.Domino(Head(True), Head(0.7)),
+        programino.Domino(Head('Maria'), Head(True)),
+        programino.Domino(Head(str), Head(str)),
+        programino.Domino(Head('Juvi'), Head(int)),
+        programino.Domino(Head(str), Head(False)),
+        programino.Domino(Head('Olá, Mundo!'), Head(5.6)),
     ]
 
     # for i in range(6): #modificado de 7 para 6. 2 jogadores com 8 peças cada
@@ -35,7 +35,7 @@ def _randomized_hands():
     # print(all_dominoes)
     # print(len(all_dominoes))
     #modificado de [0:7], [7:14], [14:21], [21:28] para [0:4]...
-    return [dominoes.Hand(all_dominoes[0:8]), dominoes.Hand(all_dominoes[8:16])]
+    return [programino.Hand(all_dominoes[0:8]), programino.Hand(all_dominoes[8:16])]
 
 def _validate_player(player):
     '''
@@ -48,7 +48,7 @@ def _validate_player(player):
     valid_players = range(2) #mudei de 4 pra 2. se tornar 2 jogadores
     if player not in valid_players:
         valid_players = ', '.join(str(p) for p in valid_players)
-        raise dominoes.NoSuchPlayerException('{} is not a valid player. Valid players'
+        raise programino.NoSuchPlayerException('{} is not a valid player. Valid players'
                                              ' are: {}'.format(player, valid_players))
 
 def _domino_hand(d, hands):
@@ -63,7 +63,7 @@ def _domino_hand(d, hands):
         if d in hand:
             return i
 
-    raise dominoes.NoSuchDominoException('{} is not in any hand!'.format(d))
+    raise programino.NoSuchDominoException('{} is not in any hand!'.format(d))
 
 def _remaining_points(hands):
     '''
@@ -92,7 +92,7 @@ def _validate_hands(hands, missing):
     '''
     for h, m in zip(hands, missing):
         for value in m:
-            if dominoes.hand.contains_value(h, value):
+            if programino.hand.contains_value(h, value):
                 return False
 
     return True
@@ -276,7 +276,7 @@ class Game:
         :raises NoSuchDominoException: if starting_domino is invalid
         :raises NoSuchPlayerException: if starting_player is invalid
         '''
-        board = dominoes.Board()
+        board = programino.Board()
 
         hands = _randomized_hands()
 
@@ -305,7 +305,7 @@ class Game:
 
         :return: None
         '''
-        self.board = dominoes.SkinnyBoard.from_board(self.board)
+        self.board = programino.SkinnyBoard.from_board(self.board)
 
     def _update_valid_moves(self):
         '''
@@ -347,13 +347,13 @@ class Game:
         '''
         # se já existir resultado é pq o jogo acabou e n pode mais jogar
         if self.result is not None:
-            raise dominoes.GameOverException('Cannot make a move - the game is over!')
+            raise programino.GameOverException('Cannot make a move - the game is over!')
 
         i = self.hands[self.turn].play(d)
 
         try:
             self.board.add(d, left)
-        except dominoes.EndsMismatchException as error:
+        except programino.EndsMismatchException as error:
             # return the domino to the hand if it cannot be placed on the board
             self.hands[self.turn].draw(d, i)
 
@@ -366,7 +366,7 @@ class Game:
         # valida se o jogador que acabou de jogar ficou com a mão vazia, assim vencendo o jogo
         if not self.hands[self.turn]:
             self.valid_moves = ()
-            self.result = dominoes.Result(
+            self.result = programino.Result(
                 #self.turn, True, pow(-1, self.turn) * sum(_remaining_points(self.hands))
                 self.turn, True, sum(_remaining_points(self.hands))
             )
@@ -398,7 +398,7 @@ class Game:
             #     self.result = dominoes.Result(self.turn, False, 0)
             # else:
             #     self.result = dominoes.Result(self.turn, False, -sum(team_points))
-            self.result = dominoes.Result(self.turn, False, sum(player_points,0))
+            self.result = programino.Result(self.turn, False, sum(player_points,0))
             return self.result
 
     def missing_values(self):
@@ -413,7 +413,7 @@ class Game:
         missing = [set() for _ in self.hands]
 
         # replay the game from the beginning
-        board = dominoes.SkinnyBoard()
+        board = programino.SkinnyBoard()
         player = self.starting_player
         for move in self.moves:
             if move is None:
@@ -460,7 +460,7 @@ class Game:
             for player, hand in enumerate(self.hands):
                 if player != self.turn:
                     hand = [next(shuffled_dominoes) for _ in hand]
-                hands.append(dominoes.Hand(hand))
+                hands.append(programino.Hand(hand))
 
             # only return the hands if they are possible, according to the values we
             # know to be missing from each hand. if the hands are not possible, try
@@ -505,7 +505,7 @@ class Game:
             for player, hand in enumerate(self.hands):
                 if player != self.turn:
                     hand = next(possible_hands)
-                hands.append(dominoes.Hand(hand))
+                hands.append(programino.Hand(hand))
 
             # only yield the hands if they are possible, according
             # to the values we know to be missing from each hand
@@ -522,15 +522,15 @@ class Game:
         return not self == other
 
     def __deepcopy__(self, _):
-        if isinstance(self.board, dominoes.SkinnyBoard):
+        if isinstance(self.board, programino.SkinnyBoard):
             if self.board:
                 # SkinnyBoard attributes are ints; no need to deepcopy
-                board = dominoes.SkinnyBoard(self.board.left_end(),
+                board = programino.SkinnyBoard(self.board.left_end(),
                                              self.board.right_end(),
                                              len(self.board))
             else:
                 # board is empty
-                board = dominoes.SkinnyBoard()
+                board = programino.SkinnyBoard()
         else:
             # TODO: optimize for Board class
             board = copy.deepcopy(self.board)
@@ -539,7 +539,7 @@ class Game:
         # immutable. note that using copy.copy does not work because
         # the container of the Domino objects within the Hand also
         # needs to be copied, which the Hand initializer takes care of.
-        hands = [dominoes.Hand(hand) for hand in self.hands]
+        hands = [programino.Hand(hand) for hand in self.hands]
 
         # list of tuples of Domino and bool; shallow copy is sufficient
         moves = list(self.moves)

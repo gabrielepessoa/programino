@@ -1,9 +1,0 @@
-language: python
-python:
-  - "3.6"
-  - "3.7"
-dist: xenial
-before_install: "pip install codecov"
-install: "pip install ."
-script: "coverage run --source=dominoes/ setup.py test"
-after_success: "codecov"

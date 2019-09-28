@@ -1,5 +1,5 @@
 import collections.abc
-import dominoes
+import programino
 
 def contains_value(hand, value):
     '''
