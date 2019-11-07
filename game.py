@@ -72,9 +72,9 @@ def _remaining_points(hands):
              remaining in each of the input hands
     '''
     points = []
-    points.append(1)
-    #for hand in hands:
-    #    points.append(sum(d.first + d.second for d in hand))
+    # points.append(1)
+    for hand in hands:
+        points.append(sum(d.first + d.second for d in hand))
 
     return points
 
@@ -284,6 +284,8 @@ class Game:
 
         result = None
 
+        # se o jogador for humano
+        #if turn == 0: 
         if starting_domino is None:
             _validate_player(starting_player)
             valid_moves = tuple((d, True) for d in hands[starting_player])
@@ -295,8 +297,21 @@ class Game:
             game = cls(board, hands, moves, starting_player,
                        valid_moves, starting_player, result)
             game.make_move(*valid_moves[0])
-
         return game
+        # se o jogador for a máquina
+        #else: 
+            # # if starting_domino is None:
+            #     _validate_player(starting_player)
+            #     valid_moves = tuple((d, True) for d in hands[starting_player])
+            #     game = cls(board, hands, moves, starting_player,
+            #                valid_moves, starting_player, result)
+            # else:
+            #     starting_player = _domino_hand(starting_domino, hands)
+            #     valid_moves = ((starting_domino, True),)
+            #     game = cls(board, hands, moves, starting_player,
+            #                valid_moves, starting_player, result)
+            #     game.make_move(*valid_moves[0])
+            # return game
 
     def skinny_board(self):
         '''
@@ -367,8 +382,9 @@ class Game:
         if not self.hands[self.turn]:
             self.valid_moves = ()
             self.result = programino.Result(
-                #self.turn, True, pow(-1, self.turn) * sum(_remaining_points(self.hands))
-                self.turn, True, sum(_remaining_points(self.hands))
+                # self.turn, True, pow(-1, self.turn) * sum(_remaining_points(self.hands))
+                # self.turn, True, sum(_remaining_points(self.hands))
+                self.turn, True, 1
             )
             return self.result
 

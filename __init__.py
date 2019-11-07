@@ -15,3 +15,4 @@ from programino.result import Result
 from programino.series import Series
 from programino.skinny_board import SkinnyBoard
 from programino.head import Head
+from programino.ia_programino import IAProgramino
