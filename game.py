@@ -72,9 +72,9 @@ def _remaining_points(hands):
              remaining in each of the input hands
     '''
     points = []
-    # points.append(1)
-    for hand in hands:
-        points.append(sum(d.first + d.second for d in hand))
+    points.append(1)
+    # for hand in hands:
+    #   points.append(sum(d.first + d.second for d in hand))
 
     return points
 
@@ -340,6 +340,10 @@ class Game:
                 moves.append((d, False)) 
 
         self.valid_moves = tuple(moves)
+
+    def make_random_move(self):
+        move_random = random.choice(self.valid_moves)
+        self.make_move(*move_random)
 
     def make_move(self, d, left):
         '''
