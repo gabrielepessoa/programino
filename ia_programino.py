@@ -6,12 +6,12 @@ import copy
 
 class IAProgramino:
 
-    def __init__(self): 
-        self.run = 0 # qtd de iterações do algoritmo
+    def __init__(self):
+        self.run = 0  # qtd de iterações do algoritmo
 
     def chose_better_move(self, game):
         move = self.play_max(game, True)
-        print(self.run)
+        # print(self.run)
         return move
 
     def play_max(self, game, is_root=False):

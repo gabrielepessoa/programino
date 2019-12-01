@@ -3,6 +3,8 @@ import programino
 import itertools
 import random
 from .head import Head
+from .domino import Domino
+
 
 def _randomized_hands():
     '''
@@ -10,32 +12,45 @@ def _randomized_hands():
              this variation of the game, and distributing them evenly
     '''
     all_dominoes = [
-        programino.Domino(Head(int), Head(int)), 
-        programino.Domino(Head(float), Head(1)),
-        programino.Domino(Head(str), Head(27)),
-        programino.Domino(Head('V'), Head(int)),
-        programino.Domino(Head(float), Head(float)),
-        programino.Domino(Head(int), Head(0.4)),
-        programino.Domino(Head('Oi'), Head(13.1)),
-        programino.Domino(Head(3.14), Head('F')),
-        programino.Domino(Head(bool), Head(bool)),
-        programino.Domino(Head('False'), Head(5)),
-        programino.Domino(Head('True'), Head(0.7)),
-        programino.Domino(Head('Maria'), Head('Verdadeiro')),
-        #programino.Domino(Head(str), Head(str)),
-        #programino.Domino(Head('Juvi'), Head(int)),
-        #programino.Domino(Head(str), Head('Falso')),
-        #programino.Domino(Head('Olá, Mundo!'), Head(5.6)),
+        Domino(
+            Head(int),      Head(int)),
+        Domino(
+            Head(float),    Head(1)),
+        Domino(
+            Head(str),      Head(27)),
+        Domino(
+            Head('V'),      Head(int)),
+        Domino(
+            Head(float),    Head(float)),
+        Domino(
+            Head(int),      Head(0.4)),
+        Domino(
+            Head('Oi'),     Head(13.1)),
+        Domino(
+            Head(3.14),     Head('F')),
+        Domino(
+            Head(bool),     Head(bool)),
+        Domino(
+            Head('False'),  Head(5)),
+        Domino(
+            Head('True'),   Head(0.7)),
+        Domino(
+            Head('Maria'),  Head('Verdadeiro')),
+        #Domino(Head(str), Head(str)),
+        #Domino(Head('Juvi'), Head(int)),
+        #Domino(Head(str), Head('Falso')),
+        #Domino(Head('Olá, Mundo!'), Head(5.6)),
     ]
-
     # for i in range(6): #modificado de 7 para 6. 2 jogadores com 8 peças cada
     #     for j in range(i, 6):#modificado de 7 para 6. 2 jogadores com 8 peças cada
-    #        all_dominoes.append(dominoes.Domino(i, j)) 
-    # random.shuffle(all_dominoes)
-    # print(all_dominoes)
-    # print(len(all_dominoes))
-    #modificado de [0:7], [7:14], [14:21], [21:28] para [0:4]...
-    return [programino.Hand(all_dominoes[0:6]), programino.Hand(all_dominoes[6:12])]
+    #        all_dominoes.append(dominoes.Domino(i, j))
+    random.shuffle(all_dominoes)
+    # modificado de [0:7], [7:14], [14:21], [21:28] para [0:4]...
+    hand_0 = programino.Hand(all_dominoes[0:6])
+    hand_1 = programino.Hand(all_dominoes[6:12])
+
+    return [hand_0, hand_1]
+
 
 def _validate_player(player):
     '''
@@ -45,11 +60,12 @@ def _validate_player(player):
     :return: None
     :raises NoSuchPlayerException: if the player is invalid
     '''
-    valid_players = range(2) #mudei de 4 pra 2. se tornar 2 jogadores
+    valid_players = range(2)  # mudei de 4 pra 2. se tornar 2 jogadores
     if player not in valid_players:
         valid_players = ', '.join(str(p) for p in valid_players)
         raise programino.NoSuchPlayerException('{} is not a valid player. Valid players'
-                                             ' are: {}'.format(player, valid_players))
+                                               ' are: {}'.format(player, valid_players))
+
 
 def _domino_hand(d, hands):
     '''
@@ -59,11 +75,12 @@ def _domino_hand(d, hands):
     :raises NoSuchDominoException: if no hand contains the specified domino
     '''
     for i, hand in enumerate(hands):
-        #print(hand)
+        # print(hand)
         if d in hand:
             return i
 
     raise programino.NoSuchDominoException('{} is not in any hand!'.format(d))
+
 
 def _remaining_points(hands):
     '''
@@ -77,6 +94,7 @@ def _remaining_points(hands):
     #   points.append(sum(d.first + d.second for d in hand))
 
     return points
+
 
 def _validate_hands(hands, missing):
     '''
@@ -96,6 +114,7 @@ def _validate_hands(hands, missing):
                 return False
 
     return True
+
 
 def _all_possible_partitionings(elements, sizes):
     '''
@@ -126,6 +145,7 @@ def _all_possible_partitionings(elements, sizes):
             # put results together and yield up
             yield (partition,) + other_partitions
 
+
 def next_player(player):
     '''
     Returns the player that plays after the specified player.
@@ -134,7 +154,8 @@ def next_player(player):
                        next player. Must be 0, 1, 2, or 3.
     :return: the next player
     '''
-    return (player + 1) % 2 #modificado de 4 para 2
+    return (player + 1) % 2  # modificado de 4 para 2
+
 
 class Game:
     '''
@@ -248,6 +269,7 @@ class Game:
         Player 3's hand: [3|3][0|0][2|2]
         Player 1 won and scored 32 points!
     '''
+
     def __init__(self, board, hands, moves, turn,
                  valid_moves, starting_player, result):
         self.board = board
@@ -317,11 +339,11 @@ class Game:
         moves = []
         for d in self.hands[self.turn]:
             if left_end in d:
-                moves.append((d, True))  
+                moves.append((d, True))
             # do not double count moves if both of the board's ends have
             # the same value, and a domino can be placed on both of them
             if right_end in d and left_end != right_end:
-                moves.append((d, False)) 
+                moves.append((d, False))
 
         self.valid_moves = tuple(moves)
 
@@ -350,7 +372,8 @@ class Game:
         '''
         # se já existir resultado é pq o jogo acabou e n pode mais jogar
         if self.result is not None:
-            raise programino.GameOverException('Cannot make a move - the game is over!')
+            raise programino.GameOverException(
+                'Cannot make a move - the game is over!')
 
         i = self.hands[self.turn].play(d)
 
@@ -402,7 +425,8 @@ class Game:
             #     self.result = dominoes.Result(self.turn, False, 0)
             # else:
             #     self.result = dominoes.Result(self.turn, False, -sum(team_points))
-            self.result = programino.Result(self.turn, False, sum(player_points,0))
+            self.result = programino.Result(
+                self.turn, False, sum(player_points, 0))
             return self.result
 
     def missing_values(self):
@@ -451,11 +475,13 @@ class Game:
         # subtracting the dominoes that have been played (which are public
         # knowledge) and the dominoes in the current player's hand from the
         # initial set of dominoes
-        other_dominoes = [d for p, h in enumerate(self.hands) for d in h if p != self.turn]
+        other_dominoes = [d for p, h in enumerate(
+            self.hands) for d in h if p != self.turn]
 
         while True:
             # generator for a shuffled shallow copy of other_dominoes
-            shuffled_dominoes = (d for d in random.sample(other_dominoes, len(other_dominoes)))
+            shuffled_dominoes = (d for d in random.sample(
+                other_dominoes, len(other_dominoes)))
 
             # generate random hands by partitioning the shuffled dominoes according
             # to how many dominoes need to be in each of the other hands. since we
@@ -491,11 +517,13 @@ class Game:
         # subtracting the dominoes that have been played (which are public
         # knowledge) and the dominoes in the current player's hand from the
         # initial set of dominoes
-        other_dominoes = {d for p, h in enumerate(self.hands) for d in h if p != self.turn}
+        other_dominoes = {d for p, h in enumerate(
+            self.hands) for d in h if p != self.turn}
 
         # get the lengths of all the other hands, so
         # that we know how many dominoes to place in each
-        other_hand_lengths = [len(h) for p, h in enumerate(self.hands) if p != self.turn]
+        other_hand_lengths = [len(h) for p, h in enumerate(
+            self.hands) if p != self.turn]
 
         # iterate over all possible hands that the other players might have
         for possible_hands in _all_possible_partitionings(other_dominoes, other_hand_lengths):
@@ -530,8 +558,8 @@ class Game:
             if self.board:
                 # SkinnyBoard attributes are ints; no need to deepcopy
                 board = programino.SkinnyBoard(self.board.left_end(),
-                                             self.board.right_end(),
-                                             len(self.board))
+                                               self.board.right_end(),
+                                               len(self.board))
                 print("passou no if if __deepcopy__")
             else:
                 # board is empty
@@ -567,6 +595,24 @@ class Game:
         return type(self)(board, hands, moves, turn,
                           valid_moves, starting_player, result)
 
+    def get_result(self):
+        '''
+        :return: a list of points for each game possible result
+                 [victoryPlayer0, victoryPlayer1, stuck]
+        '''
+        if self.result is not None:
+            countWonPlayer0 = 0
+            countWonPlayer1 = 0
+            countStuck = 0
+            if self.result.won:
+                if self.result.player == 0:
+                    countWonPlayer0 += 1
+                else:
+                    countWonPlayer1 += 1
+            else:
+                countStuck += 1
+            return [countWonPlayer0, countWonPlayer1, countStuck]
+
     def __str__(self):
         string_list = ['Board: {}'.format(self.board)]
         global countWonPlayer0, countWonPlayer1, countStuck
@@ -581,46 +627,16 @@ class Game:
             string_list.append("Player {}'s turn".format(self.turn))
         else:
             if self.result.won:
-
-                string_list.append(
-                   'Player {} won!'.format(self.result.player)
-                # string_list.append(
-                #    'Player {} won and scored {} points!'.format(self.result.player,
-                #                                                 abs(self.result.points))
-                )
+                string_list.append('Player {} won!'.format(self.result.player))
                 if self.result.player == 0:
                     countWonPlayer0 += 1
                 else:
                     countWonPlayer1 += 1
-                # print('Total de ganhos player 0: ', countWonPlayer0)
-                # print('Total de ganhos player 1: ', countWonPlayer1)
-                # print('Total de empates: ', countStuck)
             else:
-                if not self.result.points:
-                    string_list.append(
-                        'Player {} stuck the game!'.format(self.result.player)
-                        #'Player {} stuck the game and tied (0 points)!'.format(self.result.player)
-                    )
-                    countStuck += 1
-                    # print('Total de ganhos player 0: ', countWonPlayer0)
-                    # print('Total de ganhos player 1: ', countWonPlayer1)
-                    # print('Total de empates: ', countStuck)
-                # elif pow(-1, self.result.player) * self.result.points > 0:
-                #    string_list.append(
-                #        'Player {} stuck the game and scored {} points!'.format(self.result.player,
-                #                                                                abs(self.result.points))
-                #    )
-                else:
-                    string_list.append(
-                        'Player {} stuck the game!'.format(self.result.player)
-                    #    'Player {} stuck the game and scored'
-                    #    ' {} points for the opposing team!'.format(self.result.player,
-                    #                                               abs(self.result.points))
-                    )
-                    countStuck += 1
-                    # print('Total de ganhos player 0: ', countWonPlayer0)
-                    # print('Total de ganhos player 1: ', countWonPlayer1)
-                    # print('Total de empates: ', countStuck)
+                string_list.append(
+                    'Player {} stuck the game!'.format(self.result.player)
+                )
+                countStuck += 1
 
         print('Total de ganhos player 0: ', countWonPlayer0)
         print('Total de ganhos player 1: ', countWonPlayer1)
