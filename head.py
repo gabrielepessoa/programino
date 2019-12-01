@@ -2,23 +2,45 @@ def is_a_primitive_type(value):
     return isinstance(value, type)
 
 
-TRUTHS = ['V', 'True', 'Verdadeiro']
-LIES = ['F', 'False', 'Falso']
-BOOLEANS = TRUTHS + LIES
-
-#Classe criada para verificar cabeça por cabeça do programinó
 class Head:
+    '''
+    Classe Python para objetos que representam uma 'cabeça' ou
+    extremidade de um dominó. Como no Programinó as peças são
+    formadas por variáveis e tipos da programação, fez-se necessário
+    a criação desta classe para definir a equivalência de valores
+    que, na realidade, não são iguais.
+
+    :param obj value: valor da cabeça/extremidade
+
+    .. code-block:: python
+
+        >>> from programino import Head
+        >>> h1 = Head(3.14)
+        >>> h2 = Head(float)
+        >>> h1 == h2
+        True
+    '''
+
+    TRUTHS = ['V', 'True', 'Verdadeiro']
+    LIES = ['F', 'False', 'Falso']
+    BOOLEANS = TRUTHS + LIES
 
     def __init__(self, value):
         self.value = value
 
+    def __str__(self):
+        return str(self.value)
+
+    def __repr__(self):
+        return str(self)
+
     def __eq__(self, other):
 
-        if self.value in BOOLEANS:
-            self.value = True if self.value in TRUTHS else False
+        if self.value in Head.BOOLEANS:
+            self.value = True if self.value in Head.TRUTHS else False
 
-        if other.value in BOOLEANS:
-            other.value = True if other.value in TRUTHS else False
+        if other.value in Head.BOOLEANS:
+            other.value = True if other.value in Head.TRUTHS else False
 
         # Verifica se o primeiro valor é um tipo primitivo (int, str, bool)
         if is_a_primitive_type(self.value):
@@ -52,6 +74,3 @@ class Head:
                 return type(self.value) == type(other.value)
 
         return False
-
-    def __str__(self):
-        return str(self.value)
