@@ -69,7 +69,7 @@ class Domino(DominoBase):
         return hash(tuple(sorted((self.first, self.second))))
 
     def __contains__(self, key):
-        return (key == self.first.value) or (key == self.second.value)
+        return (key == self.first) or (key == self.second)
 
     @property
     def heads(self):
