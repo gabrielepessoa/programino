@@ -5,3 +5,11 @@ build/
 dist/
 docs/_build/
 venv/
+
+__pycache__
+.vscode
+*.pyc
+olders
+*.log
+*.pid
+example.py
