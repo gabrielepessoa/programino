@@ -1,3 +1,4 @@
+import programino
 from .game import Game
 import math
 import copy

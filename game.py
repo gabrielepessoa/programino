@@ -22,20 +22,20 @@ def _randomized_hands():
         programino.Domino(Head('False'), Head(5)),
         programino.Domino(Head('True'), Head(0.7)),
         programino.Domino(Head('Maria'), Head('Verdadeiro')),
-        programino.Domino(Head(str), Head(str)),
-        programino.Domino(Head('Juvi'), Head(int)),
-        programino.Domino(Head(str), Head('Falso')),
-        programino.Domino(Head('Olá, Mundo!'), Head(5.6)),
+        #programino.Domino(Head(str), Head(str)),
+        #programino.Domino(Head('Juvi'), Head(int)),
+        #programino.Domino(Head(str), Head('Falso')),
+        #programino.Domino(Head('Olá, Mundo!'), Head(5.6)),
     ]
 
     # for i in range(6): #modificado de 7 para 6. 2 jogadores com 8 peças cada
     #     for j in range(i, 6):#modificado de 7 para 6. 2 jogadores com 8 peças cada
-    #         all_dominoes.append(dominoes.Domino(i, j)) 
-    random.shuffle(all_dominoes)
+    #        all_dominoes.append(dominoes.Domino(i, j)) 
+    # random.shuffle(all_dominoes)
     # print(all_dominoes)
     # print(len(all_dominoes))
     #modificado de [0:7], [7:14], [14:21], [21:28] para [0:4]...
-    return [programino.Hand(all_dominoes[0:8]), programino.Hand(all_dominoes[8:16])]
+    return [programino.Hand(all_dominoes[0:6]), programino.Hand(all_dominoes[6:12])]
 
 def _validate_player(player):
     '''
@@ -284,8 +284,6 @@ class Game:
 
         result = None
 
-        # se o jogador for humano
-        #if turn == 0: 
         if starting_domino is None:
             _validate_player(starting_player)
             valid_moves = tuple((d, True) for d in hands[starting_player])
@@ -298,20 +296,6 @@ class Game:
                        valid_moves, starting_player, result)
             game.make_move(*valid_moves[0])
         return game
-        # se o jogador for a máquina
-        #else: 
-            # # if starting_domino is None:
-            #     _validate_player(starting_player)
-            #     valid_moves = tuple((d, True) for d in hands[starting_player])
-            #     game = cls(board, hands, moves, starting_player,
-            #                valid_moves, starting_player, result)
-            # else:
-            #     starting_player = _domino_hand(starting_domino, hands)
-            #     valid_moves = ((starting_domino, True),)
-            #     game = cls(board, hands, moves, starting_player,
-            #                valid_moves, starting_player, result)
-            #     game.make_move(*valid_moves[0])
-            # return game
 
     def skinny_board(self):
         '''
@@ -548,12 +532,16 @@ class Game:
                 board = programino.SkinnyBoard(self.board.left_end(),
                                              self.board.right_end(),
                                              len(self.board))
+                print("passou no if if __deepcopy__")
             else:
                 # board is empty
                 board = programino.SkinnyBoard()
+                print("passou no if else __deepcopy__")
         else:
             # TODO: optimize for Board class
             board = copy.deepcopy(self.board)
+            # print("passou no else __deepcopy__")
+            # print(board)
 
         # only need to copy the Hand, because the Domino objects are
         # immutable. note that using copy.copy does not work because
@@ -581,6 +569,10 @@ class Game:
 
     def __str__(self):
         string_list = ['Board: {}'.format(self.board)]
+        global countWonPlayer0, countWonPlayer1, countStuck
+        countWonPlayer0 = 0
+        countWonPlayer1 = 0
+        countStuck = 0
 
         for i, hand in enumerate(self.hands):
             string_list.append("Player {}'s hand: {}".format(i, hand))
@@ -589,27 +581,50 @@ class Game:
             string_list.append("Player {}'s turn".format(self.turn))
         else:
             if self.result.won:
+
                 string_list.append(
-                    'Player {} won and scored {} points!'.format(self.result.player,
-                                                                 abs(self.result.points))
+                   'Player {} won!'.format(self.result.player)
+                # string_list.append(
+                #    'Player {} won and scored {} points!'.format(self.result.player,
+                #                                                 abs(self.result.points))
                 )
+                if self.result.player == 0:
+                    countWonPlayer0 += 1
+                else:
+                    countWonPlayer1 += 1
+                # print('Total de ganhos player 0: ', countWonPlayer0)
+                # print('Total de ganhos player 1: ', countWonPlayer1)
+                # print('Total de empates: ', countStuck)
             else:
                 if not self.result.points:
                     string_list.append(
-                        'Player {} stuck the game and tied (0 points)!'.format(self.result.player)
+                        'Player {} stuck the game!'.format(self.result.player)
+                        #'Player {} stuck the game and tied (0 points)!'.format(self.result.player)
                     )
-                elif pow(-1, self.result.player) * self.result.points > 0:
-                    string_list.append(
-                        'Player {} stuck the game and scored {} points!'.format(self.result.player,
-                                                                                abs(self.result.points))
-                    )
+                    countStuck += 1
+                    # print('Total de ganhos player 0: ', countWonPlayer0)
+                    # print('Total de ganhos player 1: ', countWonPlayer1)
+                    # print('Total de empates: ', countStuck)
+                # elif pow(-1, self.result.player) * self.result.points > 0:
+                #    string_list.append(
+                #        'Player {} stuck the game and scored {} points!'.format(self.result.player,
+                #                                                                abs(self.result.points))
+                #    )
                 else:
                     string_list.append(
-                        'Player {} stuck the game and scored'
-                        ' {} points for the opposing team!'.format(self.result.player,
-                                                                   abs(self.result.points))
+                        'Player {} stuck the game!'.format(self.result.player)
+                    #    'Player {} stuck the game and scored'
+                    #    ' {} points for the opposing team!'.format(self.result.player,
+                    #                                               abs(self.result.points))
                     )
+                    countStuck += 1
+                    # print('Total de ganhos player 0: ', countWonPlayer0)
+                    # print('Total de ganhos player 1: ', countWonPlayer1)
+                    # print('Total de empates: ', countStuck)
 
+        print('Total de ganhos player 0: ', countWonPlayer0)
+        print('Total de ganhos player 1: ', countWonPlayer1)
+        print('Total de empates: ', countStuck)
         return '\n'.join(string_list)
 
     def __repr__(self):

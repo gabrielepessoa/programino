@@ -40,8 +40,8 @@ class Hand(collections.abc.Sequence):
         >>> h
         [1|3]
     '''
-    def __init__(self, dominoes):
-        self._dominoes = list(dominoes)
+    def __init__(self, programino):
+        self._programino = list(programino)
 
     def play(self, d):
         '''
@@ -52,12 +52,12 @@ class Hand(collections.abc.Sequence):
         :raises NoSuchDominoException: if the domino is not in the hand
         '''
         try:
-            i = self._dominoes.index(d)
+            i = self._programino.index(d)
         except ValueError:
-            raise dominoes.NoSuchDominoException('Cannot make move -'
+            raise programino.NoSuchDominoException('Cannot make move -'
                                                  ' {} is not in hand!'.format(d))
 
-        self._dominoes.pop(i)
+        self._programino.pop(i)
         return i
 
     def draw(self, d, i=None):
@@ -70,12 +70,12 @@ class Hand(collections.abc.Sequence):
         :return: None
         '''
         if i is None:
-            self._dominoes.append(d)
+            self._programino.append(d)
         else:
-            self._dominoes.insert(i, d)
+            self._programino.insert(i, d)
 
     def __getitem__(self, i):
-        return self._dominoes[i]
+        return self._programino[i]
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
@@ -87,10 +87,10 @@ class Hand(collections.abc.Sequence):
         return not self == other
 
     def __len__(self):
-        return len(self._dominoes)
+        return len(self._programino)
 
     def __str__(self):
-        return ''.join(str(d) for d in self._dominoes)
+        return ''.join(str(d) for d in self._programino)
 
     def __repr__(self):
         return str(self)

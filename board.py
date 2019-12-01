@@ -43,7 +43,7 @@ class Board:
         try:
             return self.board[0].first #pegar primeira cabeça do domino no board a esquerda
         except IndexError:
-            raise dominoes.EmptyBoardException('Cannot retrieve the left end of'
+            raise programino.EmptyBoardException('Cannot retrieve the left end of'
                                                ' the board because it is empty!')
 
     def right_end(self):
@@ -54,7 +54,7 @@ class Board:
         try:
             return self.board[-1].second #pegar última cabeça do domino no board a direita
         except IndexError:
-            raise dominoes.EmptyBoardException('Cannot retrieve the right end of'
+            raise programino.EmptyBoardException('Cannot retrieve the right end of'
                                                ' the board because it is empty!')
 
     def _add_left(self, d):
@@ -72,7 +72,7 @@ class Board:
         elif d.second == self.left_end():
             self.board.appendleft(d)
         else:
-            raise dominoes.EndsMismatchException(
+            raise programino.EndsMismatchException(
                 '{} cannot be added to the left of'
                 ' the board - values do not match!'.format(d)
             )
@@ -92,7 +92,7 @@ class Board:
         elif d.second == self.right_end():
             self.board.append(d.inverted())
         else:
-            raise dominoes.EndsMismatchException(
+            raise programino.EndsMismatchException(
                 '{} cannot be added to the right of'
                 ' the board - values do not match!'.format(d)
             )
