@@ -17,29 +17,29 @@ def _randomized_hands():
         Domino(
             Head(float),    Head(1)),
         Domino(
-            Head(str),      Head(27)),
+            Head(3.14),      Head('F')),
         Domino(
             Head('V'),      Head(int)),
         Domino(
             Head(float),    Head(float)),
-        Domino(
-            Head(int),      Head(0.4)),
-        Domino(
-            Head('Oi'),     Head(13.1)),
-        Domino(
-            Head(3.14),     Head('F')),
-        Domino(
-            Head(bool),     Head(bool)),
+        #Domino(
+        #    Head(int),      Head(0.4)),
+        #Domino(
+        #    Head('Oi'),     Head(13.1)),
+        #Domino(
+         #   Head(str),     Head(27)),
+        #Domino(
+        #    Head(bool),     Head(bool)),
         Domino(
             Head('False'),  Head(5)),
         Domino(
             Head('True'),   Head(0.7)),
         Domino(
             Head('Maria'),  Head('Verdadeiro')),
-        #Domino(Head(str), Head(str)),
-        #Domino(Head('Juvi'), Head(int)),
-        #Domino(Head(str), Head('Falso')),
-        #Domino(Head('Olá, Mundo!'), Head(5.6)),
+        Domino(Head(str), Head(str)),
+        Domino(Head('Juvi'), Head(int)),
+        Domino(Head(str), Head('Falso')),
+        Domino(Head('Olá, Mundo!'), Head(5.6)),
     ]
     # for i in range(6): #modificado de 7 para 6. 2 jogadores com 8 peças cada
     #     for j in range(i, 6):#modificado de 7 para 6. 2 jogadores com 8 peças cada
@@ -638,9 +638,9 @@ class Game:
                 )
                 countStuck += 1
 
-        print('Total de ganhos player 0: ', countWonPlayer0)
-        print('Total de ganhos player 1: ', countWonPlayer1)
-        print('Total de empates: ', countStuck)
+        #print('Total de ganhos player 0: ', countWonPlayer0)
+        #print('Total de ganhos player 1: ', countWonPlayer1)
+        #print('Total de empates: ', countStuck)
         return '\n'.join(string_list)
 
     def __repr__(self):

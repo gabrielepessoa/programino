@@ -66,7 +66,7 @@ class Domino(DominoBase):
     def __hash__(self):
         # A ordem dos valores não importa
         # ex: hash(Domino(Head('Casa'), Head(3))) == hash(Domino(Head(3), Head('Casa')))
-        return hash(tuple(sorted((self.first, self.second))))
+        return hash(tuple((self.first, self.second)))
 
     def __contains__(self, key):
         return (key == self.first) or (key == self.second)
