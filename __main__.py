@@ -32,72 +32,72 @@ print("({}) jogos de jogadas aleatórias x jogadas com minimax\n".format(ai_test
 
 
 # Iniciando a simulação de (Aleatório x Aleatório)
-random_test_results = []
-total_random_test_result = [0, 0, 0]
-for count in range(0, random_test_number):
-    print("(Aleatório x Aleatório) Jogo {}:".format(count+1))
+# random_test_results = []
+# total_random_test_result = [0, 0, 0]
+# for count in range(0, random_test_number):
+#     print("(Aleatório x Aleatório) Jogo {}:".format(count+1))
 
-    d = Domino(Head(float), Head(float))
-    game = Game.new(starting_domino=d)
-    while game.valid_moves:
-        game.make_random_move()
+#     d = Domino(Head(float), Head(float))
+#     game = Game.new(starting_domino=d)
+#     while game.valid_moves:
+#         game.make_random_move()
 
-    result = game.get_result()
-    random_test_results.append(result)
-    total_random_test_result[result.index(1)] += 1
+#     result = game.get_result()
+#     random_test_results.append(result)
+#     total_random_test_result[result.index(1)] += 1
 
-    print(result, end='\n\n')
-    # time.sleep(1)  # REMOVER AO EXECUTAR GRANDES EXPERIMENTOS
+#     print(result, end='\n\n')
+#     # time.sleep(1)  # REMOVER AO EXECUTAR GRANDES EXPERIMENTOS
 
-print("Resultado da experiência: ", random_test_results, end='\n\n')
+# print("Resultado da experiência: ", random_test_results, end='\n\n')
 
-# Salvando o resultado do experimento (Aleatório x Aleatório)
-with open(random_file_name, 'w') as random_experiment:
-    writer = csv.writer(random_experiment, delimiter=';')
-    writer.writerow(["player0", "player1", "stuck"])
-    writer.writerows(random_test_results)
-    writer.writerow(total_random_test_result)
+# # Salvando o resultado do experimento (Aleatório x Aleatório)
+# with open(random_file_name, 'w') as random_experiment:
+#     writer = csv.writer(random_experiment, delimiter=';')
+#     writer.writerow(["player0", "player1", "stuck"])
+#     writer.writerows(random_test_results)
+#     writer.writerow(total_random_test_result)
 
 
-# Iniciando a simulação de (Aleatório x Minimax)
-ai_test_results = []
-total_ai_test_result = [0, 0, 0]
-for count in range(0, ai_test_number):
-    print("(Aleatório x Minimax) Jogo {}:".format(count + 1))
+# # Iniciando a simulação de (Aleatório x Minimax)
+# ai_test_results = []
+# total_ai_test_result = [0, 0, 0]
+# for count in range(0, ai_test_number):
+#     print("(Aleatório x Minimax) Jogo {}:".format(count + 1))
 
-    d = Domino(Head(float), Head(float))
-    game = Game.new(starting_domino=d)
-    while game.valid_moves:
-        if game.turn == 0:  # se for o jogador 0
-            game.make_random_move()
-        else:
-            # move = IAProgramino().chose_better_move(game)
-            game_copy = copy.deepcopy(game)
-            game_copy.skinny_board()
-            move = IAProgramino().chose_better_move(game_copy)
-            game.make_move(*move)
+#     d = Domino(Head(float), Head(float))
+#     game = Game.new(starting_domino=d)
+#     while game.valid_moves:
+#         if game.turn == 0:  # se for o jogador 0
+#             game.make_random_move()
+#         else:
+#             # move = IAProgramino().chose_better_move(game)
+#             game_copy = copy.deepcopy(game)
+#             game_copy.skinny_board()
+#             move = IAProgramino().chose_better_move(game_copy)
+#             game.make_move(*move)
 
-    result = game.get_result()
-    ai_test_results.append(result)
-    total_ai_test_result[result.index(1)] += 1
+#     result = game.get_result()
+#     ai_test_results.append(result)
+#     total_ai_test_result[result.index(1)] += 1
 
-    print(result, end='\n\n')
+#     print(result, end='\n\n')
 
-print("Resultado da experiência: ", ai_test_results, end='\n\n')
+# print("Resultado da experiência: ", ai_test_results, end='\n\n')
 
-# Salvando o resultado do experimento (Aleatório x Minimax)
-with open(ai_file_name, 'w') as ai_experiment:
-    writer = csv.writer(ai_experiment, delimiter=';')
-    writer.writerow(["player0", "player1", "stuck"])
-    writer.writerows(ai_test_results)
-    writer.writerow(total_ai_test_result)
+# # Salvando o resultado do experimento (Aleatório x Minimax)
+# with open(ai_file_name, 'w') as ai_experiment:
+#     writer = csv.writer(ai_experiment, delimiter=';')
+#     writer.writerow(["player0", "player1", "stuck"])
+#     writer.writerows(ai_test_results)
+#     writer.writerow(total_ai_test_result)
 
 
 # Iniciando a simulação de (Aleatório x Worst)
 worst_test_results = []
 total_worst_test_result = [0, 0, 0]
 for count in range(0, ai_test_number):
-    print("(Aleatório x Minimax) Jogo {}:".format(count + 1))
+    #print("(Aleatório x Minimax) Jogo {}:".format(count + 1))
     d = Domino(Head(float), Head(float))
     game = Game.new(starting_domino=d)
     while game.valid_moves:

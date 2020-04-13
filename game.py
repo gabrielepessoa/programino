@@ -560,11 +560,11 @@ class Game:
                 board = programino.SkinnyBoard(self.board.left_end(),
                                                self.board.right_end(),
                                                len(self.board))
-                print("passou no if if __deepcopy__")
+                #print("passou no if if __deepcopy__")
             else:
                 # board is empty
                 board = programino.SkinnyBoard()
-                print("passou no if else __deepcopy__")
+                #print("passou no if else __deepcopy__")
         else:
             # TODO: optimize for Board class
             board = copy.deepcopy(self.board)
