@@ -93,10 +93,10 @@ class Worst:
         if not game.valid_moves:
             if game.turn == 0:
                 # print("Humano venceu!\n")
-                return 1  # humano venceu
+                return -1  # humano venceu
             elif game.turn == 1:
                 # print("Máquina venceu!\n")
-                return -1  # máquina venceu
+                return 1  # máquina venceu
             else:
                 # print("Empate!\n")
                 return 0  # empate
